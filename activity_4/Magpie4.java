@@ -53,9 +53,18 @@ public class Magpie4
 		// Responses which require transformations
 		else if (findKeyword(statement, "I want to", 0) >= 0)
 		{
-			response = transformIWantToStatement(statement);
+			response = transformIYouStatement(statement);
 		}
-
+                else if (findKeyword(statement, "I am", 0) >= 0
+                              && findKeyword(statement, "you", 0) >= 0)
+		{
+			response = transformIAmYouStatement(statement);
+		}
+		else if (findKeyword(statement, "I", 0) >= 0
+                              && findKeyword(statement, "you", 0) >= 0)
+		{
+			response = transformIYouStatement(statement);
+		}
 		else
 		{
 			// Look for a two word (you <something> me)
@@ -92,14 +101,14 @@ public class Magpie4
 			statement = statement.substring(0, statement
 					.length() - 1);
 		}
-		int psn = findKeyword (statement, "I want to", 0);
+		int psn = findKeyword (statement, "I want", 0);
 		String restOfStatement = statement.substring(psn + 9).trim();
-		return "What would it mean to " + restOfStatement + "?";
+		return "Would you really be happy if you had " + restOfStatement + "?";
 	}
 
 	
 	
-	/**
+       /**
 	 * Take a statement with "you <something> me" and transform it into 
 	 * "What makes you think that I <something> you?"
 	 * @param statement the user statement, assumed to contain "you" followed by "me"
@@ -113,7 +122,7 @@ public class Magpie4
 				.length() - 1);
 		if (lastChar.equals("."))
 		{
-			statement = statement.substring(0, statement
+		          statement = statement.substring(0, statement
 					.length() - 1);
 		}
 		
@@ -124,11 +133,45 @@ public class Magpie4
 		return "What makes you think that I " + restOfStatement + " you?";
 	}
 	
-	
+	private String transformIYouStatement(String statement)
+       {
+		//  Remove the final period, if there is one
+		statement = statement.trim();
+		String lastChar = statement.substring(statement
+				.length() - 1);
+		if (lastChar.equals("."))
+		{
+		          statement = statement.substring(0, statement
+					.length() - 1);
+		}
+		
+		int psnOfI = findKeyword (statement, "I", 0);
+		int psnOfYou = findKeyword (statement, "you", psnOfI + 1);
+		
+		String restOfStatement = statement.substring(psnOfI + 1, psnOfYou).trim();
+		return "Why do you " + restOfStatement + " me?";
+       }
 
+	private String transformIAmYouStatement(String statement)
+       {
+		//  Remove the final period, if there is one
+		statement = statement.trim();
+		String lastChar = statement.substring(statement
+				.length() - 1);
+		if (lastChar.equals("."))
+		{
+		          statement = statement.substring(0, statement
+					.length() - 1);
+		}
+		
+		int psnOfIAm = findKeyword (statement, "I am", 0);
+		int psnOfYou = findKeyword (statement, "you", psnOfIAm + 4);
+		
+		String restOfStatement = statement.substring(psnOfIAm + 4, psnOfYou).trim();
+		return "Why are you " + restOfStatement + " me?";
+       }
 	
-	
-	/**
+       /**
 	 * Search for one word in phrase. The search is not case
 	 * sensitive. This method will check that the given goal
 	 * is not a substring of a longer string (so, for
@@ -146,7 +189,7 @@ public class Magpie4
 	 */
 	private int findKeyword(String statement, String goal,
 			int startPos)
-	{
+        {
 		String phrase = statement.trim().toLowerCase();
 		goal = goal.toLowerCase();
 

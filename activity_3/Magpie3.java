@@ -31,8 +31,8 @@ public class Magpie3
 	 */
 	public String getResponse(String statement)
 	{
-		String response = "";
-		if (statement.length() == 0)
+	        String response = "";
+	        if (statement.length() == 0)
 		{
 			response = "Say something, please.";
 		}
@@ -47,11 +47,49 @@ public class Magpie3
 		{
 			response = "Tell me more about your family.";
 		}
+		else if (findKeyword(statement, "dog") >= 0
+                || findKeyword(statement, "cat") >= 0)
+                {
+                      response = "Tell me more about your pets.";
+                }
+                else if (findKeyword(statement, "Mr. Appel") >= 0)
+                {
+                      response = "He sounds like an interesting guy.";
+                }
+                else if (statement.trim().equals(""))
+                {
+                      response = "Say something please.";
+                }
+                else if (findKeyword(statement, "who") >= 0
+                        || findKeyword(statement, "Who") >= 0)
+                {
+                      response = "No one. Or maybe you. I don't know.";
+                }
+                else if (findKeyword(statement, "what") >= 0
+                        || findKeyword(statement, "What") >= 0)
+                {
+                      response = "You're asking the wrong question here.";
+                }
+                else if (findKeyword(statement, "weather") >= 0
+                        || findKeyword(statement, "Weather") >= 0)
+                {
+                     response = "I don’t know about you but I’m hot.";
+                }
+                else if (findKeyword(statement, "how") >= 0
+                        || findKeyword(statement, "How") >= 0)
+                {
+                      response = "Whichever safe method you prefer.";
+                }
+                else if (findKeyword(statement, "you") >= 0
+                        || findKeyword(statement, "You") >= 0)
+                {
+                      response = "Enough about me, let’s hear about you!";
+                }
 		else
 		{
-			response = getRandomResponse();
+	              response = getRandomResponse();
 		}
-		return response;
+	        return response;
 	}
 
 	/**
